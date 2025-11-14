@@ -99,17 +99,18 @@ exports.joinChallengeWithGamification = async (req, res) => {
       return res.status(404).json({ message: "Challenge not found" });
 
     // Create user challenge record
-    const userC = await UserChallenge.create({
-      userId: req.user.uid,
-      userEmail: req.user.email,
-      userName: req.user.name,
-      challengeId,
-      status: "Ongoing",
-      progress: 0,
-      xp: 0,
-      streak: 1,
-      lastActiveDate: new Date(),
-    });
+const userC = await UserChallenge.create({
+  userId: req.user.uid,
+  userEmail: req.user.email,
+  userName: req.user.name,
+  challengeId,
+  status: "Ongoing",
+  progress: 0,
+  xp: 0,
+  streak: 1,
+  lastActiveDate: new Date(),
+});
+
 
     // AUTO TASK GENERATOR based on duration
     let tasks = [];

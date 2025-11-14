@@ -1,5 +1,7 @@
 module.exports = function fakeAuth(req, res, next) {
   const userId = req.header("x-user-id");
+  const userEmail = req.header("x-user-email");
+  const userName = req.header("x-user-name");
 
   if (!userId) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -7,8 +9,8 @@ module.exports = function fakeAuth(req, res, next) {
 
   req.user = {
     uid: userId,
-    email: req.header("x-user-email") || "",
-    name: req.header("x-user-name") || "",   // <-- ADD THIS
+    email: userEmail || "",
+    name: userName || ""
   };
 
   next();

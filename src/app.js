@@ -13,13 +13,22 @@ const leaderboardRoutes = require("./routes/leaderboardRoutes");
 const app = express();
 
 // Middlewares
-app.use(
-  cors({
-    origin: "*", // you can restrict to your frontend domain later
-    methods: "GET,POST,PUT,PATCH,DELETE",
-    allowedHeaders: "Content-Type, Authorization, x-user-id, x-user-email",
-  })
-);
+const corsOptions = {
+  origin: "http://localhost:5173",
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "x-user-id",
+    "x-user-email",
+    "x-user-name"
+  ],
+};
+
+app.use(cors(corsOptions));
+
+
 app.use(express.json());
 app.use(morgan("dev"));
 
