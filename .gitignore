@@ -4,3 +4,7 @@ node_modules
 coverage    
 npm-debug.log
 yarn-error.log
+
+
+vercel.json
+.vercel

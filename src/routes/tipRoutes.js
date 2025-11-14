@@ -3,19 +3,39 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const Tip = require("../models/Tip");
 
-// GET latest 5 tips
+// Latest 5 tips
 router.get("/", async (req, res) => {
-  const tips = await Tip.find().sort({ createdAt: -1 }).limit(5);
-  res.json(tips);
+  try {
+    const tips = await Tip.find().sort({ createdAt: -1 }).limit(5);
+    res.json(tips);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// CREATE tip
+// Create tip
 router.post("/", auth, async (req, res) => {
-  const tip = await Tip.create({
-    ...req.body,
-    author: req.user.email,
-  });
-  res.status(201).json(tip);
+  try {
+    const { title, content, category } = req.body;
+
+    if (!title || !content) {
+      return res
+        .status(400)
+        .json({ message: "Title and content are required" });
+    }
+
+    const tip = await Tip.create({
+      title,
+      content,
+      category: category || "General",
+      author: req.user.email,
+      authorName: req.user.email,
+    });
+
+    res.status(201).json(tip);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

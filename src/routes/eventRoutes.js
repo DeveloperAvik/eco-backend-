@@ -3,19 +3,42 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const Event = require("../models/Event");
 
-// GET 4 upcoming events
+// Upcoming 4 events
 router.get("/", async (req, res) => {
-  const events = await Event.find().sort({ date: 1 }).limit(4);
-  res.json(events);
+  try {
+    const now = new Date();
+    const events = await Event.find({ date: { $gte: now } })
+      .sort({ date: 1 })
+      .limit(4);
+
+    res.json(events);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// CREATE event
 router.post("/", auth, async (req, res) => {
-  const event = await Event.create({
-    ...req.body,
-    organizer: req.user.email,
-  });
-  res.status(201).json(event);
+  try {
+    const { title, description, date, location, maxParticipants } = req.body;
+
+    if (!title || !description || !date || !location) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const event = await Event.create({
+      title,
+      description,
+      date,
+      location,
+      maxParticipants: maxParticipants || 50,
+      organizer: req.user.email,
+      currentParticipants: 0,
+    });
+
+    res.status(201).json(event);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 module.exports = router;

@@ -2,17 +2,31 @@ const mongoose = require("mongoose");
 
 const UserChallengeSchema = new mongoose.Schema(
   {
-    userId: { type: String, required: true, index: true },
+    userId: {
+      type: String,
+      required: true,
+    },
+
+    // NEW FIELDS — store user email + name from Firebase
+    userEmail: {
+      type: String,
+      default: "",
+    },
+
+    userName: {
+      type: String,
+      default: "",
+    },
+
     challengeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Challenge",
       required: true,
-      index: true,
     },
 
     status: {
       type: String,
-      enum: ["Not Started", "Ongoing", "Completed"],
+      enum: ["Ongoing", "Completed", "Not Started"],
       default: "Ongoing",
     },
 
@@ -23,19 +37,27 @@ const UserChallengeSchema = new mongoose.Schema(
       max: 100,
     },
 
-    // Gamification
-    xp: { type: Number, default: 0, min: 0 },
-    streak: { type: Number, default: 1, min: 1 },
-    level: { type: Number, default: 1 },
+    // GAMIFICATION
+    xp: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
+
+    streak: {
+      type: Number,
+      default: 1,
+      min: 1,
+    },
+
+    level: {
+      type: Number,
+      default: 1,
+    },
 
     lastActiveDate: {
       type: Date,
       default: () => new Date(),
-    },
-
-    joinDate: {
-      type: Date,
-      default: Date.now,
     },
   },
   { timestamps: true }

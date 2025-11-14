@@ -7,7 +7,8 @@ module.exports = function fakeAuth(req, res, next) {
 
   req.user = {
     uid: userId,
-    email: req.header("x-user-email") || ""
+    email: req.header("x-user-email") || "",
+    name: req.header("x-user-name") || "",   // <-- ADD THIS
   };
 
   next();
