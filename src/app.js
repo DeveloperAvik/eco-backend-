@@ -14,7 +14,7 @@ const app = express();
 
 // Middlewares
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173","https://eco-project-five.vercel.app"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: [
