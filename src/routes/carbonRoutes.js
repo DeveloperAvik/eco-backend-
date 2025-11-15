@@ -1,3 +1,4 @@
+const { getInsight } = require("../services/gemini");
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
@@ -141,6 +142,27 @@ router.get("/month-projection", auth, async (req, res) => {
     week: Math.round(avg * 7),
     month: Math.round(avg * 30),
   });
+});
+
+// ... (existing code)
+
+// Get AI insight
+router.post("/insight", auth, async (req, res) => {
+  try {
+    const { today, stats, challenges, activities } = req.body;
+    const context = {
+      today,
+      stats,
+      challenges,
+      activities,
+      user: req.user,
+    };
+    const insight = await getInsight(context);
+    res.json(insight);
+  } catch (error) {
+    console.error("Error getting insight:", error);
+    res.status(500).json({ message: "Error getting insight" });
+  }
 });
 
 module.exports = router;
