@@ -165,4 +165,28 @@ router.post("/insight", auth, async (req, res) => {
   }
 });
 
+// Average daily carbon output for the last 30 days
+router.get("/average", auth, async (req, res) => {
+  const start = new Date();
+  start.setDate(start.getDate() - 30);
+
+  const logs = await CarbonLog.aggregate([
+    { $match: { userId: req.user.uid, createdAt: { $gte: start } } },
+    {
+      $group: {
+        _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+        total: { $sum: "$amount" },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        average: { $avg: "$total" },
+      },
+    },
+  ]);
+
+  res.json({ average: logs[0]?.average || 0 });
+});
+
 module.exports = router;

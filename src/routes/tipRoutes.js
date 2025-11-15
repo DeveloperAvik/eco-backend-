@@ -38,4 +38,16 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+// Random tip
+router.get("/random", async (req, res) => {
+  try {
+    const count = await Tip.countDocuments();
+    const random = Math.floor(Math.random() * count);
+    const tip = await Tip.findOne().skip(random);
+    res.json(tip);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
